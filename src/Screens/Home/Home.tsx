@@ -11,10 +11,17 @@ import { useGeolocated } from "react-geolocated";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import MaterialTable, { QueryResult } from "material-table";
 
+import { useContext } from "react";
+import Header from "../../Components/Header/Header";
+import UserInfoContext, {
+  UserInfoContextType,
+} from "../../Store/UserInfo/UserInfoContext";
+
 export default function Home() {  
   const getPersonAPI = useAPI(Person.getAllPersons);
   let userCoordinates: GeolocationCoordinates | null = null;
   const navigate: NavigateFunction = useNavigate();
+  const context = useContext<UserInfoContextType>(UserInfoContext);
 
   const columns = [
     { title: "SobreNome", field: "lastName" },
@@ -87,46 +94,49 @@ export default function Home() {
   };
   
 return (
-  <Grid
-    container
-    spacing={0}
-    direction="column"
-    justifyContent="left"
-    alignItems="left"
-  >
-    <Grid item xs={12}>
-      <Title gutterBottom variant="h1" color="primary.dark">
-        Lista de Colaboradores
-      </Title>
-    </Grid>
-    <Grid item xs={12}>
-      <Button variant="primary" onClick={() => onAddPage()}>
-        Adicionar Colaborador
-      </Button>
-    </Grid>
-    <Grid item lg={12}>
-      <MaterialTable
-        columns={columns}
-        data={getData}
-        actions={[
-          {
-            icon: "visibility",
-            tooltip: "See Detail",
-            onClick: (event, rowData) => {
-              onChangePage(rowData as unknown as IPerson);
+  <>
+    <Header />
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      justifyContent="left"
+      alignItems="left"
+    >
+      <Grid item xs={12}>
+        <Title gutterBottom variant="h1" color="primary.dark">
+          Lista de Colaboradores, {context.userInfo.userName}
+        </Title>
+      </Grid>
+      <Grid item xs={12}>
+        <Button variant="primary" onClick={() => onAddPage()}>
+          Adicionar Colaborador
+        </Button>
+      </Grid>
+      <Grid item lg={12}>
+        <MaterialTable
+          columns={columns}
+          data={getData}
+          actions={[
+            {
+              icon: "visibility",
+              tooltip: "See Detail",
+              onClick: (event, rowData) => {
+                onChangePage(rowData as unknown as IPerson);
+              },
             },
-          },
-        ]}
-        options={{
-          showTitle: false,
-          search: true,
-          actionsColumnIndex: -1,
-          headerStyle: TableHeaderStyle,
-          rowStyle: TableRowStyle,
-          searchFieldStyle: TableSearchFieldStyle,
-        }}
-      />
+          ]}
+          options={{
+            showTitle: false,
+            search: true,
+            actionsColumnIndex: -1,
+            headerStyle: TableHeaderStyle,
+            rowStyle: TableRowStyle,
+            searchFieldStyle: TableSearchFieldStyle,
+          }}
+        />
+      </Grid>
     </Grid>
-  </Grid>
+  </>
 );
 }
