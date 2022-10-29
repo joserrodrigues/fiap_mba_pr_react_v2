@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Home from './Screens/Home/Home';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter } from "react-router-dom";
+import RoutesManager from "./Routes/RoutesManager";
 import MuiThemes from "./Utils/Common/MuiThemes";
 
 const root = ReactDOM.createRoot(
@@ -10,9 +12,11 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <MuiThemes>
-      <Home />
-    </MuiThemes>
+    <BrowserRouter>
+      <MuiThemes>
+        <RoutesManager />
+      </MuiThemes>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
