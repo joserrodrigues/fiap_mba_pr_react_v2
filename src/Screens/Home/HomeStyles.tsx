@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
 import Colors from "../../Utils/Common/Colors";
 
 export const Main = styled.div`
@@ -14,26 +13,9 @@ export const Title = styled(Typography)`
   }
 `;
 
-export const CustomLink = styled(Link)`
-  && {
-    text-align: center;
-    font-size: 16vm;
-    color: ${Colors.PrimaryMedium};
-  }
+export const CustomLink = styled.div`
+  text-decoration: underline;
+  cursor: pointer;
+  color: ${Colors.PrimaryMedium};
+  margin-bottom: 10px;
 `;
-
-type CustomBoxType = {
-  color: string;
-};
-const Box2 = styled(Main)`
-  && {
-    text-align: center;
-    width: 200px;
-    height: 60px;
-    background-color: ${(props: CustomBoxType) => props.color || "blue"};
-  }
-`;
-
-export const CustomBox = ({ color }: CustomBoxType) => {
-  return <Box2 color={color} />;
-};
