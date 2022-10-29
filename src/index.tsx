@@ -3,14 +3,16 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Home from './Screens/Home/Home';
 import reportWebVitals from './reportWebVitals';
-import "bootstrap/dist/css/bootstrap.min.css";
+import MuiThemes from "./Utils/Common/MuiThemes";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <Home />
+    <MuiThemes>
+      <Home />
+    </MuiThemes>
   </React.StrictMode>
 );
 
