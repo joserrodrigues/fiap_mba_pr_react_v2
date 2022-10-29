@@ -8,15 +8,12 @@ import useAPI from "../../Services/APIs/Common/useAPI";
 import Person from "../../Services/APIs/Persons/Persons";
 import { useGeolocated } from "react-geolocated";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import MaterialTable from "material-table";
+import MaterialTable, { QueryResult } from "material-table";
 
 export default function Home() {  
-  const getPersonAPI = useAPI(Person.getPersons);
+  const getPersonAPI = useAPI(Person.getAllPersons);
   let userCoordinates: GeolocationCoordinates | null = null;
   const navigate: NavigateFunction = useNavigate();
-
-  const [allPersons, setAllPersons] = useState<IPerson[]>([]);
-  const [isLoading, setIsLoading] = useState(false)
 
   const columns = [
     { title: "SobreNome", field: "lastName" },
@@ -37,23 +34,37 @@ export default function Home() {
     userCoordinates = coords;
   }
 
-  useEffect(() => {
-    setIsLoading(true);
-    getPersonAPI
-      .requestPromise()
-      .then((info: AllPersons) => {
-        setIsLoading(false);
-        let auxAllPersons: IPerson[] = [];
-        info.persons.forEach((person) => {
-          auxAllPersons.push(person);
+  const getData = (query: any): Promise<QueryResult<{ [x: string]: {} }>> => {
+    return new Promise((resolve, reject) => {
+      console.log(query);
+
+      let page = query.page + 1;
+      let info = `page=${page}&perPage=${query.pageSize}`;
+      if (query.orderBy !== undefined && query.orderBy !== "") {
+        info += `&orderBy=${query.orderBy.field}`;
+      }
+      if (query.orderDirection !== undefined && query.orderDirection !== "") {
+        info += `&orderDirection=${query.orderDirection}`;
+      }
+      if (query.search !== undefined && query.search !== "") {
+        info += `&search=${query.search}`;
+      }
+      console.log(info);
+      getPersonAPI
+        .requestPromise(info)
+        .then((info: any) => {
+          console.log(info);
+          resolve({
+            data: info.persons,
+            page: info.page - 1,
+            totalCount: info.totalItems,
+          });
+        })
+        .catch((error: string) => {
+          console.log(error);
         });
-        setAllPersons(auxAllPersons);
-      })
-      .catch((info: any) => {
-        console.log(info);
-        setIsLoading(false);        
-      });
-  }, []);
+    });
+  };
 
   const onChangePage = (person: IPerson) => {
     navigate("Detail/" + person._id, {
@@ -81,14 +92,13 @@ return (
     <Grid item lg={12}>
       <MaterialTable
         columns={columns}
-        data={allPersons}
-        isLoading={isLoading}
+        data={getData}
         actions={[
           {
             icon: "visibility",
             tooltip: "See Detail",
             onClick: (event, rowData) => {
-              onChangePage(rowData as IPerson);
+              onChangePage(rowData as unknown as IPerson);
             },
           },
         ]}
