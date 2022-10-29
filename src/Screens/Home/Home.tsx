@@ -1,54 +1,69 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { AllPersons, IPerson } from "../../Interfaces/IPerson";
+
+import Container from "@mui/material/Container";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
-import { Title, Box, AcUnitIconCustom, CustomBox } from "./HomeStyles";
+import Typography from "@mui/material/Typography";
+import { CustomCard, TitleTopPage } from "./HomeStyles";
 
-function App() {
-  const [count, setCount] = useState<number>(0);
+import useAPI from "../../Services/APIs/Common/useAPI";
+import Person from "../../Services/APIs/Persons/Persons";
 
-  const addCount = () => {
-    setCount((count) => count + 1);
-  };
+export default function Home() {
+  const [cards, setCards] = useState<JSX.Element[]>([]);
+  const getPersonAPI = useAPI(Person.getPersons);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      console.log("Teste " + count);
-      //functional update
-      setCount((count) => count + 1);
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
+    getPersonAPI
+      .requestPromise()
+      .then((info: AllPersons) => {
+        let mountCards: JSX.Element[] = [];
+        info.persons.forEach((person: IPerson) => {
+          mountCards.push(
+            <Grid key={person._id} item lg={4} md={6} sm={12}>
+              <CustomCard>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={person.image}
+                  alt="green iguana"
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {person.firstName} {person.lastName}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {person.jobTitle}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small">Share</Button>
+                  <Button size="small">Learn More</Button>
+                </CardActions>
+              </CustomCard>
+            </Grid>
+          );
+        });
+        setCards(mountCards);
+      })
+      .catch((info: any) => {
+        console.log(info);
+      });
   }, []);
   
   return (
-    <Box>
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        className="container"
-      >
-        <AcUnitIconCustom />
-        <Title gutterBottom variant="h1" color="primary.dark">
-          Info {count}
-        </Title>
-        <Title gutterBottom variant="h1" color="secondary.dark">
-          Info {count}
-        </Title>
-        <CustomBox color="#fff000"></CustomBox>
-        <Button onClick={() => addCount()} variant="primary">
-          {" "}
-          Primary{" "}
-        </Button>
-        <Button color="secondary"> Secondary </Button>
-        <Button color="success"> Success </Button>
-      </Grid>
-    </Box>
+    <Container>
+      <TitleTopPage>
+        <Typography variant="h1" color="primary">
+          Usuários
+        </Typography>
+      </TitleTopPage>
+      <Grid container>{cards}</Grid>
+    </Container>
   );
 }
-
-export default App;
