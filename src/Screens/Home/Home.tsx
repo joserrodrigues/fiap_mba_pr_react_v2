@@ -1,8 +1,7 @@
 import { useState } from "react";
-import "./Home.css";
-import Typography from "@mui/material/Typography";
-import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import { Title, Box, AcUnitIconCustom, CustomBox } from "./HomeStyles";
 
 function App() {
   const [count, setCount] = useState<number>(0);
@@ -12,26 +11,31 @@ function App() {
   };
 
   return (
-    <Grid
-      container
-      spacing={0}
-      direction="column"
-      justifyContent="center"
-      alignItems="center"
-      className="container"
-    >
-      <Typography gutterBottom variant="h1" color="primary.dark">
-        Info {count}
-      </Typography>
-      <Typography gutterBottom variant="h1" color="secondary.dark">
-        Info {count}
-      </Typography>
-      <Button onClick={() => addCount()} variant="primary">
-        Primary
-      </Button>
-      <Button color="secondary"> Secondary </Button>
-      <Button color="success"> Success </Button>
-    </Grid>
+    <Box>
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        className="container"
+      >
+        <AcUnitIconCustom />
+        <Title gutterBottom variant="h1" color="primary.dark">
+          Info {count}
+        </Title>
+        <Title gutterBottom variant="h1" color="secondary.dark">
+          Info {count}
+        </Title>
+        <CustomBox color="#fff000"></CustomBox>
+        <Button onClick={() => addCount()} variant="primary">
+          {" "}
+          Primary{" "}
+        </Button>
+        <Button color="secondary"> Secondary </Button>
+        <Button color="success"> Success </Button>
+      </Grid>
+    </Box>
   );
 }
 
