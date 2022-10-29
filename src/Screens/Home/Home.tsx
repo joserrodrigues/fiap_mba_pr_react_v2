@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import { Title, Box, AcUnitIconCustom, CustomBox } from "./HomeStyles";
@@ -10,6 +10,18 @@ function App() {
     setCount((count) => count + 1);
   };
 
+  useEffect(() => {
+    const timer = setInterval(() => {
+      console.log("Teste " + count);
+      //functional update
+      setCount((count) => count + 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+  
   return (
     <Box>
       <Grid
