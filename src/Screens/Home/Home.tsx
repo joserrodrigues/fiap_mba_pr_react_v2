@@ -2,6 +2,7 @@ import React, { useState, useEffect, } from "react";
 import { AllPersons, IPerson } from "../../Interfaces/IPerson";
 
 import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import { Title, TableHeaderStyle, TableRowStyle, TableSearchFieldStyle } from "./HomeStyles";
 
 import useAPI from "../../Services/APIs/Common/useAPI";
@@ -75,6 +76,15 @@ export default function Home() {
       },
     });
   };
+
+  const onAddPage = () => {
+    navigate("add/", {
+      state: {
+        lat: userCoordinates!.latitude,
+        lng: userCoordinates!.longitude,
+      },
+    });
+  };
   
 return (
   <Grid
@@ -88,6 +98,11 @@ return (
       <Title gutterBottom variant="h1" color="primary.dark">
         Lista de Colaboradores
       </Title>
+    </Grid>
+    <Grid item xs={12}>
+      <Button variant="primary" onClick={() => onAddPage()}>
+        Adicionar Colaborador
+      </Button>
     </Grid>
     <Grid item lg={12}>
       <MaterialTable
